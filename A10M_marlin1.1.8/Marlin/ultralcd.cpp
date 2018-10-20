@@ -655,15 +655,15 @@ void lcd_resume_menu0(void) {
   MENU_ITEM(submenu, "Yes", lcd_resume_menu_ok);
   MENU_ITEM(submenu, "NO", lcd_resume_menu_cancel);
   /*
-  lcd.setCursor(0,0);
-  lcd.print("Resume print ?  ");
+  SETCURSOR(0, 0);
+  LCDPRINT("Resume print ?  ");
 
   MENU_ITEM(submenu, "", lcd_resume_menu_ok);
-  lcd.setCursor(1,1);
-  lcd.print("Yes  ");
+  SETCURSOR(1, 1);
+  LCDPRINT("Yes  ");
   MENU_ITEM(submenu, "", lcd_resume_menu_cancel);
-  lcd.setCursor(1,2);
-  lcd.print("No  ");
+  SETCURSOR(1, 2);
+  LCDPRINT("No  ");
   */
   END_MENU();
 
@@ -898,8 +898,8 @@ void kill_screen(const char* lcd_msg) {
       }
       char tmp[32];
       sprintf_P(tmp, PSTR(MSG_START_Z ": %4d.%d mm"), int(mixer.start_z), int(mixer.start_z * 10) % 10);
-      lcd.setCursor(2,1);
-      lcd.print(tmp);
+      SETCURSOR(2, 1);
+      LCDPRINT(tmp);
 
       if (lcd_clicked) {
         _lcd_mixer_commit_gradient();
@@ -922,8 +922,8 @@ void kill_screen(const char* lcd_msg) {
 
       char tmp[32];
       sprintf_P(tmp, PSTR(MSG_END_Z ": %4d.%d mm"), int(mixer.end_z), int(mixer.end_z * 10) % 10);
-      lcd.setCursor(2,1);
-      lcd.print(tmp);
+      SETCURSOR(2, 1);
+      LCDPRINT(tmp);
 
       if (lcd_clicked) {
         _lcd_mixer_commit_gradient();
@@ -942,12 +942,12 @@ void kill_screen(const char* lcd_msg) {
       if (lcdDrawUpdate) {
         char tmp[32];
         sprintf_P(tmp, PSTR(MSG_START_MIX ": %3d%% %3d%%"), mixer.start_pct, 100 - mixer.start_pct);
-        lcd.setCursor(0, 1);
-        lcd.print(tmp);
+        SETCURSOR(0, 1);
+        LCDPRINT(tmp);
 
         sprintf_P(tmp, PSTR("(Z <= %d.%d)"), int(mixer.start_z), int(mixer.start_z * 10) % 10);
-        lcd.setCursor(LCD_WIDTH - strlen(tmp), 3);
-        lcd.print(tmp);
+        SETCURSOR_RJ(strlen(tmp), 3);
+        LCDPRINT(tmp);
       }
 
       if (lcd_clicked) {
@@ -967,12 +967,12 @@ void kill_screen(const char* lcd_msg) {
       if (lcdDrawUpdate) {
         char tmp[32];
         sprintf_P(tmp, PSTR(MSG_END_MIX ": %3d%% %3d%%"), mixer.end_pct, 100 - mixer.end_pct);
-        lcd.setCursor(0, 1);
-        lcd.print(tmp);
+        SETCURSOR(0, 1);
+        LCDPRINT(tmp);
 
         sprintf_P(tmp, PSTR("(Z >= %d.%d)"), int(mixer.end_z), int(mixer.end_z * 10) % 10);
-        lcd.setCursor(LCD_WIDTH - strlen(tmp), 3);
-        lcd.print(tmp);
+        SETCURSOR_RJ(strlen(tmp), 3);
+        LCDPRINT(tmp);
       }
 
       if (lcd_clicked) {
@@ -998,15 +998,15 @@ void kill_screen(const char* lcd_msg) {
       MENU_ITEM(submenu, MSG_START_MIX ":", lcd_mixer_mix_start_edit);
       if (lcdDrawUpdate) {
         sprintf_P(tmp, PSTR("%3d;%3d%%"), mixer.start_pct, 100 - mixer.start_pct);
-        lcd.setCursor(12, 1);
-        lcd.print(tmp);
+        SETCURSOR(12, 1);
+        LCDPRINT(tmp);
       }
 
       MENU_ITEM(submenu, MSG_END_MIX ":", lcd_mixer_mix_end_edit);
       if (lcdDrawUpdate) {
         sprintf_P(tmp, PSTR("%3d;%3d%%"), mixer.end_pct, 100 - mixer.end_pct);
-        lcd.setCursor(12, 2);
-        lcd.print(tmp);
+        SETCURSOR(12, 2);
+        LCDPRINT(tmp);
       }
 
       MENU_ITEM(function, MSG_FULL_GRADIENT, _lcd_mixer_full_gradient);
@@ -1024,13 +1024,13 @@ void kill_screen(const char* lcd_msg) {
 
       MENU_ITEM(submenu, MSG_START_Z ":", lcd_mixer_gradient_z_start_edit);
       sprintf_P(tmp, PSTR("%4d.%d mm"), int(mixer.start_z), int(mixer.start_z * 10) % 10);
-      lcd.setCursor(9, 2);
-      lcd.print(tmp);
+      SETCURSOR(9, 2);
+      LCDPRINT(tmp);
 
       MENU_ITEM(submenu, MSG_END_Z ":", lcd_mixer_gradient_z_end_edit);
       sprintf_P(tmp, PSTR("%4d.%d mm"), int(mixer.end_z), int(mixer.end_z * 10) % 10);
-      lcd.setCursor(9, 3);
-      lcd.print(tmp);
+      SETCURSOR(9, 3);
+      LCDPRINT(tmp);
 
       END_MENU();
     }
@@ -1060,8 +1060,8 @@ void kill_screen(const char* lcd_msg) {
       }
       char tmp[32];
       sprintf_P(tmp, PSTR(MSG_MIX ":    %3d%% %3d%%"), mixer.rate[NOZZLE0], mixer.rate[NOZZLE1]);
-      lcd.setCursor(2,1);
-      lcd.print(tmp);
+      SETCURSOR(2, 1);
+      LCDPRINT(tmp);
 
       if (lcd_clicked) {
         mixer.gradient_flag = false;
@@ -1079,9 +1079,9 @@ void kill_screen(const char* lcd_msg) {
 
       char tmp[32];
       MENU_ITEM(submenu, MSG_MIX, lcd_mixer_mix_edit);
-      lcd.setCursor(10, 1);
+      SETCURSOR(10, 1);
       sprintf_P(tmp, PSTR("%3d;%3d%%"), mixer.rate[NOZZLE0], mixer.rate[NOZZLE1]);
-      lcd.print(tmp);
+      LCDPRINT(tmp);
 
       MENU_ITEM(function, MSG_TOGGLE_MIX, _lcd_mixer_toggle_mix);
 
@@ -1147,9 +1147,9 @@ void kill_screen(const char* lcd_msg) {
       bar_percent = constrain(bar_percent, 0, 100);
       encoderPosition = 0;
       lcd_implementation_drawmenu_static(0, PSTR(MSG_PROGRESS_BAR_TEST), true, true);
-      lcd.setCursor((LCD_WIDTH) / 2 - 2, LCD_HEIGHT - 2);
-      lcd.print(itostr3(bar_percent)); lcd.write('%');
-      lcd.setCursor(0, LCD_HEIGHT - 1); lcd_draw_progress_bar(bar_percent);
+      SETCURSOR((LCD_WIDTH) / 2 - 2, LCD_HEIGHT - 2);
+      LCDPRINT(itostr3(bar_percent)); LCDWRITE('%');
+      SETCURSOR(0, LCD_HEIGHT - 1); lcd_draw_progress_bar(bar_percent);
     }
 
     void _progress_bar_test() {
