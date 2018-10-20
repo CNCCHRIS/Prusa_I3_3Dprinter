@@ -30,9 +30,9 @@
   #error "Oops!  Make sure you have 'Arduino Mega' selected from the 'Tools -> Boards' menu."
 #endif
 
-//#ifndef BOARD_NAME
+#ifndef BOARD_NAME
   #define BOARD_NAME "GT2560 Rev.A"
-//#endif
+#endif
 #define DEFAULT_MACHINE_NAME "Prusa i3 Pro B"
 
 //
@@ -102,13 +102,12 @@
     #if ENABLED(MKS_MINI_12864)
       #define DOGLCD_A0     5
       #define DOGLCD_CS    21
-    //  #define BTN_EN1      40
-    //  #define BTN_EN2      42
+      //#define BTN_EN1      40
+      //#define BTN_EN2      42
     #else
-     
-      #define LCD_PINS_RS  5//20//rs
-      #define LCD_PINS_ENABLE 36//6//17 //enable
-      #define LCD_PINS_D4  21//16 //
+      #define LCD_PINS_RS   5   //20 [rs]
+      #define LCD_PINS_ENABLE 36   //6 //17
+      #define LCD_PINS_D4  21   //16
       #define LCD_PINS_D5  21
       #define LCD_PINS_D6   5
       #define LCD_PINS_D7   6
@@ -120,8 +119,6 @@
     #define SD_DETECT_PIN  38
 
   #else // !NEWPANEL
-
-     
 
     #define LCD_PINS_RS    16
     #define LCD_PINS_ENABLE 5
