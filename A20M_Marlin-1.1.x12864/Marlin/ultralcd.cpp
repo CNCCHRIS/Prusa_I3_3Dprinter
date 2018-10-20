@@ -607,48 +607,50 @@ uint16_t max_display_update_time = 0;
 
 void lcd_resume_menu_ok(void) {
   char tmp_n[64 + 10];
-  recovery = 0;
+  powerloss.recovery = Rec_Idle;
   //Config_StoreSettings();
   //Config_RetrieveSettings();
-  lcd_goto_screen(lcd_status_screen);
+  lcd_return_to_status();
   // enqueuecommand("M930");
-  SERIAL_ECHOLN(P_file_name);
-  recovery = 1;
+  SERIAL_ECHOLN(powerloss.P_file_name);
+  powerloss.recovery = Rec_Recovering1;
 
-  sprintf_P(tmp_n,PSTR("G92 Z%u.%u"), Z_t / 10, Z_t % 10);
+  sprintf_P(tmp_n,PSTR("G92 Z%u.%u"), powerloss.Z_t / 10, powerloss.Z_t % 10);
   SERIAL_ECHOLN(tmp_n);
   enqueue_and_echo_command(tmp_n);
   //////////////////
-  sprintf_P(tmp_n,PSTR("G92 E%u"), E_t);
+  sprintf_P(tmp_n,PSTR("G92 E%u"), powerloss.E_t);
   SERIAL_ECHOLN(tmp_n);
   enqueue_and_echo_command(tmp_n);
   //////////////
   //////////////////
-  sprintf_P(tmp_n,PSTR("M104 S%u"), T0_t);
+  sprintf_P(tmp_n,PSTR("M104 S%u"), powerloss.T0_t);
   SERIAL_ECHOLN(tmp_n);
   enqueue_and_echo_command(tmp_n);
   //////////////
 }
+
 void lcd_resume_menu_cancel(void) {
-  char tmp_n[64+10];
+  char tmp_n[64 + 10];
   //Config_StoreSettings();
   //Config_RetrieveSettings();
-  recovery = 0;
-  P_file_name[0] = 0;
-  memset(print_dir, 0, sizeof(print_dir));
-  // (void)settings.poweroff_save();
+  powerloss.recovery = Rec_Idle;
+  powerloss.P_file_name[0] = 0;
+  ZERO(powerloss.print_dir);
+  //(void)settings.poweroff_save();
   sprintf_P(tmp_n, PSTR("M500"));
   SERIAL_ECHOLN(tmp_n);
   enqueue_and_echo_command(tmp_n);
-  lcd_goto_screen(lcd_status_screen);
+  lcd_return_to_status();
 }
 
 void lcd_resume_menu0(void) {
   START_MENU();
   //////////
-  MENU_ITEM(submenu, "Resume print ?", lcd_resume_menu0);
-  MENU_ITEM(submenu, "Yes", lcd_resume_menu_ok);
-  MENU_ITEM(submenu, "NO", lcd_resume_menu_cancel);
+  STATIC_ITEM("Resume print?");
+  MENU_ITEM(function, "Yes", lcd_resume_menu_ok);
+  MENU_ITEM(function, "NO", lcd_resume_menu_cancel);
+
   /*
   SETCURSOR(0, 0);
   LCDPRINT("Resume print ?  ");
@@ -660,8 +662,8 @@ void lcd_resume_menu0(void) {
   SETCURSOR(1, 2);
   LCDPRINT("No  ");
   */
-  END_MENU();
 
+  END_MENU();
 }
 
 void lcd_resume_menu(void) {
@@ -676,7 +678,7 @@ void lcd_resume_menu(void) {
  */
 
 void lcd_status_screen() {
-  //if (recovery == 3) return;
+  //if (powerloss.recovery == Rec_Outage) return;
   #if ENABLED(ULTIPANEL)
     ENCODER_DIRECTION_NORMAL();
     ENCODER_RATE_MULTIPLY(false);
@@ -4029,7 +4031,7 @@ void kill_screen(const char* lcd_msg) {
       START_MENU();
       MENU_BACK(MSG_MAIN);
       card.getWorkDirName();
-      strcpy(print_dir,card.getWorkDirName());
+      strcpy(powerloss.print_dir, card.getWorkDirName());
       if (card.filename[0] == '/') {
         #if !PIN_EXISTS(SD_DETECT)
           MENU_ITEM(function, LCD_STR_REFRESH MSG_REFRESH, lcd_sd_refresh);
@@ -4737,9 +4739,9 @@ void kill_screen(const char* lcd_msg) {
       #endif
       UNUSED(longFilename);
       card.openAndPrintFile(filename);
-      strcpy(P_file_name, filename);
-      SERIAL_ECHOLN(P_file_name);
-      recovery = 0;
+      strcpy(powerloss.P_file_name, filename);
+      SERIAL_ECHOLN(powerloss.P_file_name);
+      powerloss.recovery = Rec_Idle;
       lcd_return_to_status();
     }
 
@@ -5108,7 +5110,7 @@ void lcd_update() {
       // Return to Status Screen after a timeout
       if (currentScreen == lcd_status_screen || defer_return_to_status)
         return_to_status_ms = ms + LCD_TIMEOUT_TO_STATUS;
-      else if (ELAPSED(ms, return_to_status_ms) && recovery != 3)
+      else if (ELAPSED(ms, return_to_status_ms) && powerloss.recovery != Rec_Outage)
         lcd_return_to_status();
 
     #endif // ULTIPANEL
