@@ -35,8 +35,6 @@
 #include "utility.h"
 #include "gcode.h"
 
-extern bool filament_switch;
-
 #if HAS_BUZZER && DISABLED(LCD_USE_I2C_BUZZER)
   #include "buzzer.h"
 #endif
@@ -3906,19 +3904,6 @@ void kill_screen(const char* lcd_msg) {
     END_MENU();
   }
 
-
-  void Switch_Filament_ON(){
-    //SERIAL_ECHOLN("liu......ON ---2\r\n");
-    LCD_MESSAGEPGM(MSG_SWITCH_FILAMENT_ON);
-    filament_switch = true;
-  }
-
-  void Switch_Filament_OFF(){
-    //SERIAL_ECHOLN("liu......OFF ---2\r\n");
-    LCD_MESSAGEPGM(MSG_SWITCH_FILAMENT_OFF);
-    filament_switch = false;
-  }
-
   /**
    *
    * "Control" > "Filament" submenu
@@ -3953,14 +3938,9 @@ void kill_screen(const char* lcd_msg) {
       #endif // EXTRUDERS > 1
     }
 
-    if (filament_switch) {
-      //SERIAL_ECHOLN("liu......ON ---1\r\n");
-      MENU_ITEM(function, MSG_SWITCH_FILAMENT_ON, Switch_Filament_OFF);
-    }
-    else {
-      //SERIAL_ECHOLN("liu......OFF ---1\r\n");
-      MENU_ITEM(function, MSG_SWITCH_FILAMENT_OFF, Switch_Filament_ON);
-    }
+    // Filament Runout Sensors
+    MENU_ITEM_EDIT(bool, MSG_FILAMENT_RUNOUT, &filament_runout_enabled);
+
     END_MENU();
   }
 

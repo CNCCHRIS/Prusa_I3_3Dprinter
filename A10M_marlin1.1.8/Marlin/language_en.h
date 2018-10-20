@@ -594,11 +594,8 @@
 #ifndef MSG_FILAMENT_DIAM
   #define MSG_FILAMENT_DIAM                   _UxGT("Fil. Dia.")
 #endif
-#ifndef MSG_SWITCH_FILAMENT_ON
-  #define MSG_SWITCH_FILAMENT_ON              _UxGT("Filament On ")
-#endif
-#ifndef MSG_SWITCH_FILAMENT_OFF
-  #define MSG_SWITCH_FILAMENT_OFF             _UxGT("Filament Off")
+#ifndef MSG_FILAMENT_RUNOUT
+  #define MSG_FILAMENT_RUNOUT                _UxGT("Filament Runout")
 #endif
 
 #ifndef MSG_MIX
